@@ -6,7 +6,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.get("/")
-def helo_page():
+def hello_page():
     return 'Welcome to My Advice Project!'
 
 @app.get("/about")
@@ -24,13 +24,13 @@ def my_advice():
     if response.status_code == 200:
         result = response.json()
 
-        return result
+        return result['slip']['advice']
     else:
         return 'Хватит слушать чужие советы, думай своей головой;)'
 
 
     #     return {
-    #         'country': result['Country_text'],
+    #         'advice': result['advice'],
     #         'activeCases': result["advice"],
     #         'newCases': result['New Cases_text']
     #     }
