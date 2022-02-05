@@ -1,46 +1,84 @@
 import requests
 
-from fastapi import FastAPI
-
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
-@app.get("/")
-def hello_page():
-    return 'Welcome to My Advice Project!'
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.get("/about")
-def my_about():
-    return 'The main purpose of this project is to make you feel better either you are upset or feeling down. ' \
-           'A good advice will cheer you up!'
+templates = Jinja2Templates(directory="templates")
 
 
-@app.get('/advice')
-def my_advice():
+@app.get("/", response_class=HTMLResponse)
+def hello_page(request: Request):
+    hello_data = {
+            "request": request}
+    return templates.TemplateResponse("item.html", hello_data)
+
+
+# @app.get("/", response_class=HTMLResponse)
+# def hello_page(request: Request):
+#     hello_data = {
+#             "request": request}
+#     return templates.TemplateResponse("index.html", hello_data)
+
+
+@app.get("/about/", response_class=HTMLResponse)
+def my_about(request: Request):
+    about_data = {
+        "request": request}
+    return templates.TemplateResponse("about.html", about_data)
+
+
+# @app.get("/about/", response_class=HTMLResponse)
+# def my_about(request: Request):
+#     about_data = {
+#         "request": request}
+#     return templates.TemplateResponse("index.html", about_data)
+
+
+@app.get("/project", response_class=HTMLResponse)
+def my_advice(request: Request):
     url = 'https://api.adviceslip.com/advice'
 
     response = requests.get(url)
 
     if response.status_code == 200:
         result = response.json()
+        data = {
+            "request": request,
+            "result": result['slip']['advice']
+        }
 
-        return result['slip']['advice']
+        return templates.TemplateResponse("project.html", data)
     else:
         return 'Хватит слушать чужие советы, думай своей головой;)'
 
 
-    #     return {
-    #         'advice': result['advice'],
-    #         'activeCases': result["advice"],
-    #         'newCases': result['New Cases_text']
-    #     }
-    # else:
-    #     return 'Opps! Проблема с источником данных'
+# @app.get("/project", response_class=HTMLResponse)
+# def my_advice(request: Request):
+#     url = 'https://api.adviceslip.com/advice'
+#
+#     response = requests.get(url)
+#
+#     if response.status_code == 200:
+#         result = response.json()
+#         data = {
+#             "request": request,
+#             "result": result['slip']['advice']
+#         }
+#
+#         return templates.TemplateResponse("index.html", data)
+#     else:
+#         return 'Хватит слушать чужие советы, думай своей головой;)'
 
-# api = 'https://api.adviceslip.com/advice'
-# advice = requests.get(api).text
-# print(advice)
 
-# https://api.adviceslip.com/advice random advice
-# https://api.adviceslip.com/advice/{slip_id} advice by ID
-# https://api.adviceslip.com/advice/search/{query} searching advice
+@app.get("/author/", response_class=HTMLResponse)
+def my_about(request: Request):
+    author_data = {
+        "request": request}
+    return templates.TemplateResponse("author.html", author_data)
+
