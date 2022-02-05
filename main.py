@@ -26,7 +26,7 @@ def hello_page(request: Request):
 #     return templates.TemplateResponse("index.html", hello_data)
 
 
-@app.get("/about/", response_class=HTMLResponse)
+@app.get("/about", response_class=HTMLResponse)
 def my_about(request: Request):
     about_data = {
         "request": request}
@@ -76,7 +76,7 @@ def my_advice(request: Request):
 #         return 'Хватит слушать чужие советы, думай своей головой;)'
 
 
-@app.get("/author/", response_class=HTMLResponse)
+@app.get("/author", response_class=HTMLResponse)
 def my_about(request: Request):
     author_data = {
         "request": request}
