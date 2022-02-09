@@ -26,22 +26,22 @@ def my_about(request: Request):
     return templates.TemplateResponse("about.html", about_data)
 
 
-@app.get("/project", response_class=HTMLResponse)
-def my_advice(request: Request):
-    url = 'https://api.adviceslip.com/advice'
-
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        result = response.json()
-        data = {
-            "request": request,
-            "result": result["slip"]["advice"]
-        }
-
-        return templates.TemplateResponse("project.html", data)
-    else:
-        return 'Хватит слушать чужие советы, думай своей головой;)'
+# @app.get("/project", response_class=HTMLResponse)
+# def my_advice(request: Request):
+#     url = 'https://api.adviceslip.com/advice'
+#
+#     response = requests.get(url)
+#
+#     if response.status_code == 200:
+#         result = response.json()
+#         data = {
+#             "request": request,
+#             "result": result["slip"]["advice"]
+#         }
+#
+#         return templates.TemplateResponse("project.html", data)
+#     else:
+#         return 'Хватит слушать чужие советы, думай своей головой;)'
 
 
 @app.get("/author", response_class=HTMLResponse)
@@ -49,4 +49,30 @@ def my_about(request: Request):
     author_data = {
         "request": request}
     return templates.TemplateResponse("author.html", author_data)
+
+
+@app.get("/project", response_class=HTMLResponse)
+def get_advice(request: Request):
+    responses = []
+
+    for i in range(3):
+        def get_advice_from_api():
+            url = 'https://api.adviceslip.com/advice'
+            r = requests.get(url)
+            if r.status_code == 200:
+                result = r.json()
+                return result["slip"]["advice"]
+            else:
+                return 'Хватит слушать чужие советы, думай своей головой;)'
+
+        responses.append(get_advice_from_api())
+
+    data = {
+        "request": request,
+        "result1": responses[0],
+        "result2": responses[1],
+        "result3": responses[2],
+    }
+    return templates.TemplateResponse("project.html", data)
+
 
