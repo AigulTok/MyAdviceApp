@@ -16,14 +16,14 @@ templates = Jinja2Templates(directory="templates")
 def hello_page(request: Request):
     hello_data = {
             "request": request}
-    return templates.TemplateResponse("item.html", hello_data)
+    return templates.TemplateResponse("index.html", hello_data)
 
 
 @app.get("/about", response_class=HTMLResponse)
 def my_about(request: Request):
     about_data = {
         "request": request}
-    return templates.TemplateResponse("about.html", about_data)
+    return templates.TemplateResponse("index.html", about_data)
 
 
 # @app.get("/project", response_class=HTMLResponse)
@@ -48,7 +48,7 @@ def my_about(request: Request):
 def my_about(request: Request):
     author_data = {
         "request": request}
-    return templates.TemplateResponse("author.html", author_data)
+    return templates.TemplateResponse("index.html", author_data)
 
 
 @app.get("/project", response_class=HTMLResponse)
@@ -73,6 +73,6 @@ def get_advice(request: Request):
         "result2": responses[1],
         "result3": responses[2],
     }
-    return templates.TemplateResponse("project.html", data)
+    return templates.TemplateResponse("index.html", data)
 
 
