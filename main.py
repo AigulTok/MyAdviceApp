@@ -12,59 +12,34 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
+# @app.get("/", response_class=HTMLResponse)
+# def hello_page(request: Request):
+#     hello_data = {
+#             "request": request}
+#     return templates.TemplateResponse("index.html", hello_data)
+#
+#
+# @app.get("/about", response_class=HTMLResponse)
+# def my_about(request: Request):
+#     about_data = {
+#         "request": request}
+#     return templates.TemplateResponse("index.html", about_data)
+
+
 @app.get("/", response_class=HTMLResponse)
-def hello_page(request: Request):
-    hello_data = {
-            "request": request}
-    return templates.TemplateResponse("index.html", hello_data)
-
-
-@app.get("/about", response_class=HTMLResponse)
-def my_about(request: Request):
-    about_data = {
-        "request": request}
-    return templates.TemplateResponse("index.html", about_data)
-
-
-# @app.get("/project", response_class=HTMLResponse)
-# def my_advice(request: Request):
-#     url = 'https://api.adviceslip.com/advice'
-#
-#     response = requests.get(url)
-#
-#     if response.status_code == 200:
-#         result = response.json()
-#         data = {
-#             "request": request,
-#             "result": result["slip"]["advice"]
-#         }
-#
-#         return templates.TemplateResponse("project.html", data)
-#     else:
-#         return 'Хватит слушать чужие советы, думай своей головой;)'
-
-
-@app.get("/author", response_class=HTMLResponse)
-def my_about(request: Request):
-    author_data = {
-        "request": request}
-    return templates.TemplateResponse("index.html", author_data)
-
-
-@app.get("/project", response_class=HTMLResponse)
 def get_advice(request: Request):
+
+    def get_advice_from_api():
+        url = 'https://api.adviceslip.com/advice'
+        r = requests.get(url)
+        if r.status_code == 200:
+            result = r.json()
+            return result["slip"]["advice"]
+        else:
+            return 'Хватит слушать чужие советы, думай своей головой;)'
+
     responses = []
-
     for i in range(3):
-        def get_advice_from_api():
-            url = 'https://api.adviceslip.com/advice'
-            r = requests.get(url)
-            if r.status_code == 200:
-                result = r.json()
-                return result["slip"]["advice"]
-            else:
-                return 'Хватит слушать чужие советы, думай своей головой;)'
-
         responses.append(get_advice_from_api())
 
     data = {
@@ -74,5 +49,15 @@ def get_advice(request: Request):
         "result3": responses[2],
     }
     return templates.TemplateResponse("index.html", data)
+
+
+# @app.get("/author", response_class=HTMLResponse)
+# def my_about(request: Request):
+#     author_data = {
+#         "request": request}
+#     return templates.TemplateResponse("index.html", author_data)
+
+
+
 
 
