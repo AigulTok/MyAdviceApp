@@ -19,9 +19,10 @@ def get_advice_from_api():
         result = r.json()
         return result["slip"]["advice"]
     else:
-        return 'Хватит слушать чужие советы, думай своей головой;)'
+        return 'Stop using someones advices, think with your own head;)'
 
 
+# One-page website code
 @app.get("/", response_class=HTMLResponse)
 def get_advice(request: Request):
 
@@ -38,21 +39,7 @@ def get_advice(request: Request):
     return templates.TemplateResponse("index.html", data)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Several pages website
 @app.get("/home", response_class=HTMLResponse)
 def hello_page(request: Request):
     hello_data = {
@@ -69,6 +56,7 @@ def my_about(request: Request):
 
 @app.get("/project", response_class=HTMLResponse)
 def my_project(request: Request):
+
     responses = []
     for i in range(3):
         responses.append(get_advice_from_api())
